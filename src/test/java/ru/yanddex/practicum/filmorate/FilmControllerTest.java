@@ -100,7 +100,7 @@ public class FilmControllerTest {
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.put("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().is5xxServerError()).andReturn();
         String message = response.getResolvedException().getMessage();
         assertTrue(message.contains("Такого фильма нет в базе!"));
     }

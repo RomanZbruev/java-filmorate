@@ -3,6 +3,7 @@ package ru.yanddex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yanddex.practicum.filmorate.controller.exception.IncorrectDateValidationException;
+import ru.yanddex.practicum.filmorate.controller.exception.IncorrectIdValidationException;
 import ru.yanddex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public User update(@RequestBody @Valid User user) throws IncorrectDateValidationException {
+    public User update(@RequestBody @Valid User user) throws IncorrectIdValidationException {
             if (userStorage.containsKey(user.getId())) {
                 if(user.getName().isBlank()){
                     user.setName(user.getLogin());
@@ -48,8 +49,8 @@ public class UserController {
                 log.info("Пользователь обновлен: {}", user);
                 return user;
             } else {
-                IncorrectDateValidationException exception =
-                        new IncorrectDateValidationException("Такого пользователя нет в базе!");
+                IncorrectIdValidationException exception =
+                        new IncorrectIdValidationException("Такого пользователя нет в базе!");
                 log.warn(exception.getMessage());
                 throw exception;
             }

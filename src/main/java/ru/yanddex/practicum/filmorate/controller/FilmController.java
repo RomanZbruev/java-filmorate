@@ -46,7 +46,8 @@ public class FilmController {
     }
 
     @PutMapping("/films")
-    public Film update(@RequestBody @Valid Film film) throws IncorrectDateValidationException {
+    public Film update(@RequestBody @Valid Film film) throws IncorrectIdValidationException,
+            IncorrectDateValidationException{
 
             if (film.getReleaseDate().isAfter(filmBirthday)) {
                 if (filmStorage.containsKey(film.getId())) {
@@ -54,7 +55,7 @@ public class FilmController {
                     log.info("Фильм обновлен: {}", film);
                     return film;
                 } else {
-                    IncorrectDateValidationException exception =
+                    IncorrectIdValidationException exception =
                             new IncorrectIdValidationException("Такого фильма нет в базе!");
                     log.warn(exception.getMessage());
                     throw exception;
