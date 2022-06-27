@@ -29,17 +29,17 @@ public class FilmControllerTest {
 
     @Test
     public void createCorrectFilmEmptyListTest() throws Exception {
-        Film film = new Film("Film","Description","2010-01-01",121);
+        Film film = new Film("Film", "Description", "2010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(json))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
     }
 
     @Test
     public void createFilmEmptyNameTest() throws Exception {
-        Film film = new Film("","Description","2010-01-01",121);
+        Film film = new Film("", "Description", "2010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -51,12 +51,12 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void createBigDescriptionTest() throws Exception{
+    public void createBigDescriptionTest() throws Exception {
         String badDescrition = "Художественный фильм — произведение киноискусства," +
                 " фильм как продукт художественного творчества, имеющий в основе вымышленный сюжет," +
                 " воплощённый в сценарии и интерпретируемый режиссёром, " +
                 "который создаётся с помощью актёрской игры или средств мультипликации.";
-        Film film = new Film("Film",badDescrition,"2010-01-01",121);
+        Film film = new Film("Film", badDescrition, "2010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -68,12 +68,12 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void createNegativeDurationFilmTest() throws Exception{
-        Film film = new Film("Film","Descrition","2010-01-01",-121);
+    public void createNegativeDurationFilmTest() throws Exception {
+        Film film = new Film("Film", "Descrition", "2010-01-01", -121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(json))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(json))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError()).andReturn();
         String message = response.getResolvedException().getMessage();
         assertTrue(message.contains("default message [duration]"));
@@ -81,8 +81,8 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void createFilmWithBadDateReleaseTest() throws Exception{
-        Film film = new Film("Film","Descrition","1010-01-01",121);
+    public void createFilmWithBadDateReleaseTest() throws Exception {
+        Film film = new Film("Film", "Descrition", "1010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -93,8 +93,8 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void putUpdateFilmBadIdTest() throws Exception{
-        Film film = new Film("Film","Descrition","2010-01-01",121);
+    public void putUpdateFilmBadIdTest() throws Exception {
+        Film film = new Film("Film", "Descrition", "2010-01-01", 121);
         film.setId(22);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.put("/films")
@@ -106,14 +106,14 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void putUpdateFilmEmptyNameTest() throws Exception{
-        Film film = new Film("Film","Descrition","2010-01-01",121);
+    public void putUpdateFilmEmptyNameTest() throws Exception {
+        Film film = new Film("Film", "Descrition", "2010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        Film update = new Film("","Descrition","2010-01-01",121);
+        Film update = new Film("", "Descrition", "2010-01-01", 121);
         update.setId(1);
         String updateJson = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/films")
@@ -126,14 +126,14 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void putUpdateFilmNormalTest() throws Exception{
-        Film film = new Film("Film","Descrition","2010-01-01",121);
+    public void putUpdateFilmNormalTest() throws Exception {
+        Film film = new Film("Film", "Descrition", "2010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        Film update = new Film("Update","Descrition","2010-01-01",121);
+        Film update = new Film("Update", "Descrition", "2010-01-01", 121);
         update.setId(1);
         String updateJson = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/films")
@@ -141,12 +141,12 @@ public class FilmControllerTest {
                         .content(updateJson))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
         String message = responseUpdate.getResponse().getContentAsString();
-        assertEquals(updateJson,message);
+        assertEquals(updateJson, message);
     }
 
     @Test
-    public void putUpdateFilmBigDescriptionTest() throws Exception{
-        Film film = new Film("Film","Descrition","2010-01-01",121);
+    public void putUpdateFilmBigDescriptionTest() throws Exception {
+        Film film = new Film("Film", "Descrition", "2010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -156,7 +156,7 @@ public class FilmControllerTest {
                 " фильм как продукт художественного творчества, имеющий в основе вымышленный сюжет," +
                 " воплощённый в сценарии и интерпретируемый режиссёром, " +
                 "который создаётся с помощью актёрской игры или средств мультипликации.";
-        Film update = new Film("Update",badDescrition,"2010-01-01",121);
+        Film update = new Film("Update", badDescrition, "2010-01-01", 121);
         update.setId(1);
         String updateJson = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/films")
@@ -169,14 +169,14 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void putUpdateFilmNegativeDurationTest() throws Exception{
-        Film film = new Film("Film","Descrition","2010-01-01",121);
+    public void putUpdateFilmNegativeDurationTest() throws Exception {
+        Film film = new Film("Film", "Descrition", "2010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        Film update = new Film("Update","Descrition","2010-01-01",-121);
+        Film update = new Film("Update", "Descrition", "2010-01-01", -121);
         update.setId(1);
         String updateJson = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/films")
@@ -189,14 +189,14 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void putUpdateFilmBadDataReleaseTest() throws Exception{
-        Film film = new Film("Film","Descrition","2010-01-01",121);
+    public void putUpdateFilmBadDataReleaseTest() throws Exception {
+        Film film = new Film("Film", "Descrition", "2010-01-01", 121);
         String json = gson.toJson(film);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/films")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        Film update = new Film("Update","Descrition","1010-01-01",121);
+        Film update = new Film("Update", "Descrition", "1010-01-01", 121);
         update.setId(1);
         String updateJson = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/films")

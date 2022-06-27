@@ -28,8 +28,8 @@ public class UserControllerTest {
             .create();
 
     @Test
-    public void createCorrectUserEmptyListTest() throws Exception{
-        User user = new User("user@yandex.ru","user","Sergey","2010-01-01");
+    public void createCorrectUserEmptyListTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2010-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -38,8 +38,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createNewUserEmptyEmailTest() throws Exception{
-        User user = new User("","user","Sergey","2010-01-01");
+    public void createNewUserEmptyEmailTest() throws Exception {
+        User user = new User("", "user", "Sergey", "2010-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -51,8 +51,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createNewUserBadEmailTest() throws Exception{
-        User user = new User("wiwiwiwiwi","user","Sergey","2010-01-01");
+    public void createNewUserBadEmailTest() throws Exception {
+        User user = new User("wiwiwiwiwi", "user", "Sergey", "2010-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -64,8 +64,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createNewUserEmptyLoginTest() throws Exception{
-        User user = new User("user@yandex.ru","","Sergey","2010-01-01");
+    public void createNewUserEmptyLoginTest() throws Exception {
+        User user = new User("user@yandex.ru", "", "Sergey", "2010-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -77,8 +77,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createNewUserBadLoginTest() throws Exception{
-        User user = new User("user@yandex.ru","u ser","Sergey","2010-01-01");
+    public void createNewUserBadLoginTest() throws Exception {
+        User user = new User("user@yandex.ru", "u ser", "Sergey", "2010-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -90,21 +90,21 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createNewUserEmptyNameChangeToLoginTest() throws Exception{
-        User user = new User("user@yandex.ru","user","","2010-01-01");
+    public void createNewUserEmptyNameChangeToLoginTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "", "2010-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
         String message = response.getResponse().getContentAsString();
-        User user1 = gson.fromJson(message,User.class);
+        User user1 = gson.fromJson(message, User.class);
         assertTrue(user1.getName().equals(user1.getLogin()));
     }
 
     @Test
-    public void createNewUserBadBirthdayTest() throws Exception{
-        User user = new User("user@yandex.ru","user","Sergey","2030-01-01");
+    public void createNewUserBadBirthdayTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2030-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -116,8 +116,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUserBadIdTest() throws Exception{
-        User user = new User("user@yandex.ru","user","Sergey","2020-01-01");
+    public void updateUserBadIdTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
         user.setId(1211221);
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.put("/users")
@@ -129,14 +129,14 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUserCorrectTest() throws Exception{
-        User user = new User("user@yandex.ru","user","Sergey","2020-01-01");
+    public void updateUserCorrectTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        User update = new User("user@yandex.ru","update","Sergey","2020-01-01");
+        User update = new User("user@yandex.ru", "update", "Sergey", "2020-01-01");
         update.setId(1);
         String jsonUpdate = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/users")
@@ -144,18 +144,18 @@ public class UserControllerTest {
                         .content(jsonUpdate))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
         String message = responseUpdate.getResponse().getContentAsString();
-        assertEquals(jsonUpdate,message);
+        assertEquals(jsonUpdate, message);
     }
 
     @Test
-    public void updateUserEmptyEmailTest() throws Exception{
-        User user = new User("user@yandex.ru","user","Sergey","2020-01-01");
+    public void updateUserEmptyEmailTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        User update = new User("","update","Sergey","2020-01-01");
+        User update = new User("", "update", "Sergey", "2020-01-01");
         update.setId(1);
         String jsonUpdate = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/users")
@@ -168,14 +168,14 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateNewUserBadEmailTest() throws Exception{
-        User user = new User("user@yandex.ru","user","Sergey","2020-01-01");
+    public void updateNewUserBadEmailTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        User update = new User("wiwiwiwiwi","user","Sergey","2010-01-01");
+        User update = new User("wiwiwiwiwi", "user", "Sergey", "2010-01-01");
         update.setId(1);
         String jsonUpdate = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/users")
@@ -188,14 +188,14 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateNewUserEmptyLoginTest() throws Exception{
-        User user = new User( "user@yandex.ru","user","Sergey","2020-01-01");
+    public void updateNewUserEmptyLoginTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        User update = new User("user@yandex.ru","","Sergey","2010-01-01");
+        User update = new User("user@yandex.ru", "", "Sergey", "2010-01-01");
         update.setId(1);
         String jsonUpdate = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.post("/users")
@@ -208,14 +208,14 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateNewUserBadLoginTest() throws Exception{
-        User user = new User( "user@yandex.ru","user","Sergey","2020-01-01");
+    public void updateNewUserBadLoginTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        User update = new User("user@yandex.ru","u ser","Sergey","2010-01-01");
+        User update = new User("user@yandex.ru", "u ser", "Sergey", "2010-01-01");
         update.setId(1);
         String jsonUpdate = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/users")
@@ -228,14 +228,14 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateNewUserEmptyNameChangeToLoginTest() throws Exception{
-        User user = new User( "user@yandex.ru","user","Sergey","2020-01-01");
+    public void updateNewUserEmptyNameChangeToLoginTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        User update = new User("user@yandex.ru","user","","2010-01-01");
+        User update = new User("user@yandex.ru", "user", "", "2010-01-01");
         update.setId(1);
         String jsonUpdate = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/users")
@@ -243,19 +243,19 @@ public class UserControllerTest {
                         .content(jsonUpdate))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
         String message = responseUpdate.getResponse().getContentAsString();
-        User user1 = gson.fromJson(message,User.class);
+        User user1 = gson.fromJson(message, User.class);
         assertTrue(user1.getName().equals(user1.getLogin()));
     }
 
     @Test
-    public void updateNewUserBadBirthdayTest() throws Exception{
-        User user = new User("user@yandex.ru","user","Sergey","2020-01-01");
+    public void updateNewUserBadBirthdayTest() throws Exception {
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
         String json = gson.toJson(user);
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
-        User update = new User("user@yandex.ru","user","Sergey","2030-01-01");
+        User update = new User("user@yandex.ru", "user", "Sergey", "2030-01-01");
         update.setId(1);
         String jsonUpdate = gson.toJson(update);
         MvcResult responseUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/users")

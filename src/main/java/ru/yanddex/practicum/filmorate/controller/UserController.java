@@ -31,7 +31,7 @@ public class UserController {
     public User create(@RequestBody @Valid User user) {
         id++;
         user.setId(id);
-        if(user.getName().isBlank()){
+        if (user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         userStorage.put(id, user);
@@ -41,20 +41,20 @@ public class UserController {
 
     @PutMapping("/users")
     public User update(@RequestBody @Valid User user) throws IncorrectIdValidationException {
-            if (userStorage.containsKey(user.getId())) {
-                if(user.getName().isBlank()){
-                    user.setName(user.getLogin());
-                }
-                userStorage.put(id, user);
-                log.info("Пользователь обновлен: {}", user);
-                return user;
-            } else {
-                IncorrectIdValidationException exception =
-                        new IncorrectIdValidationException("Такого пользователя нет в базе!");
-                log.warn(exception.getMessage());
-                throw exception;
+        if (userStorage.containsKey(user.getId())) {
+            if (user.getName().isBlank()) {
+                user.setName(user.getLogin());
             }
+            userStorage.put(id, user);
+            log.info("Пользователь обновлен: {}", user);
+            return user;
+        } else {
+            IncorrectIdValidationException exception =
+                    new IncorrectIdValidationException("Такого пользователя нет в базе!");
+            log.warn(exception.getMessage());
+            throw exception;
         }
+    }
 
 }
 
