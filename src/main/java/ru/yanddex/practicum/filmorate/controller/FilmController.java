@@ -22,7 +22,7 @@ public class FilmController {
     private int id = 0;
 
     @GetMapping("/films")
-    public List<Film> giveAll() {
+    public List<Film> getAll() {
         List<Film> films = new ArrayList<>();
         for (Integer id : filmStorage.keySet()) {
             films.add(filmStorage.get(id));
