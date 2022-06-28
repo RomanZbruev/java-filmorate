@@ -18,7 +18,7 @@ public class UserController {
     private int id = 0;
 
     @GetMapping("/users")
-    public List<User> giveAll() {
+    public List<User> getAll() {
         List<User> users = new ArrayList<>();
         for (Integer id : userStorage.keySet()) {
             users.add(userStorage.get(id));
