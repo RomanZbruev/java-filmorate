@@ -8,10 +8,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 public class Film {
 
+    private Set<Integer> likes;
     private int id;
     @NotBlank(message = "Название фильма должно быть заполнено")
     private String name;

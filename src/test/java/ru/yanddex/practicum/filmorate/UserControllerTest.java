@@ -2,31 +2,44 @@ package ru.yanddex.practicum.filmorate;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.yanddex.practicum.filmorate.controller.UserController;
 import ru.yanddex.practicum.filmorate.model.User;
+import ru.yanddex.practicum.filmorate.service.UserService;
+import ru.yanddex.practicum.filmorate.storage.user.UserStorage;
 
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@WebMvcTest(controllers = UserController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    UserService userService;
+    @Autowired
+    UserStorage userStorage;
+
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .create();
 
+    @BeforeEach
+    public void beforeEach(){
+        userStorage.clearStorage();
+    }
     @Test
     public void createCorrectUserEmptyListTest() throws Exception {
         User user = new User("user@yandex.ru", "user", "Sergey", "2010-01-01");
@@ -144,7 +157,10 @@ public class UserControllerTest {
                         .content(jsonUpdate))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
         String message = responseUpdate.getResponse().getContentAsString();
-        assertEquals(jsonUpdate, message);
+        assertTrue(message.contains("\"email\":\"user@yandex.ru\""));
+        assertTrue(message.contains("\"login\":\"update\""));
+        assertTrue(message.contains("\"name\":\"Sergey\""));
+        assertTrue(message.contains("\"birthday\":\"2020-01-01\""));
     }
 
     @Test

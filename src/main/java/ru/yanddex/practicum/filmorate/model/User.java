@@ -4,11 +4,13 @@ import lombok.Data;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @Data
 public class User {
 
+    private Set<Integer> friends;
     private int id;
     @Email(message = "Почта должна содержать @")
     @NotBlank(message = "Почта не должна быть пустой")

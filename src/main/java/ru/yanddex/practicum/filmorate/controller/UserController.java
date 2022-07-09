@@ -1,59 +1,71 @@
 package ru.yanddex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yanddex.practicum.filmorate.controller.exception.IncorrectDateValidationException;
+
 import ru.yanddex.practicum.filmorate.controller.exception.IncorrectIdValidationException;
 import ru.yanddex.practicum.filmorate.model.User;
+import ru.yanddex.practicum.filmorate.service.UserService;
+import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
+import ru.yanddex.practicum.filmorate.service.exception.NotInFriendsException;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-@Slf4j
 @RestController
 public class UserController {
-    private final HashMap<Integer, User> userStorage = new HashMap<>();
-    private int id = 0;
+
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/users")
     public List<User> getAll() {
-        List<User> users = new ArrayList<>();
-        for (Integer id : userStorage.keySet()) {
-            users.add(userStorage.get(id));
-        }
-        log.info("Получен запрос на просмотр списка пользователей");
-        return users;
+        return userService.getUserStorage().getAll();
     }
 
     @PostMapping("/users")
     public User create(@RequestBody @Valid User user) {
-        id++;
-        user.setId(id);
-        if (user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        userStorage.put(id, user);
-        log.info("Пользователь успешно добавлен: {}", user);
-        return user;
+        return userService.getUserStorage().create(user);
     }
 
     @PutMapping("/users")
     public User update(@RequestBody @Valid User user) throws IncorrectIdValidationException {
-        if (userStorage.containsKey(user.getId())) {
-            if (user.getName().isBlank()) {
-                user.setName(user.getLogin());
-            }
-            userStorage.put(id, user);
-            log.info("Пользователь обновлен: {}", user);
-            return user;
-        } else {
-            IncorrectIdValidationException exception =
-                    new IncorrectIdValidationException("Такого пользователя нет в базе!");
-            log.warn(exception.getMessage());
-            throw exception;
-        }
+        return userService.getUserStorage().update(user);
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUserById(@PathVariable("id") Integer id) throws IncorrectIdToGetException {
+        return userService.getUserStorage().getUserById(id);
+    }
+
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer idFriend)
+            throws IncorrectIdToGetException {
+        userService.addFriend(userService.getUserStorage().getUserById(id),
+                userService.getUserStorage().getUserById(idFriend));
+    }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer idFriend)
+            throws IncorrectIdToGetException, NotInFriendsException {
+        userService.deleteFriend(userService.getUserStorage().getUserById(id),
+                userService.getUserStorage().getUserById(idFriend));
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<User> getFriendList(@PathVariable("id") Integer id) throws IncorrectIdToGetException {
+        return userService.getFriendList(userService.getUserStorage().getUserById(id));
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable("id") Integer id, @PathVariable("otherId") Integer otherId)
+            throws IncorrectIdToGetException {
+        return userService.getCommonFriends(userService.getUserStorage().getUserById(id),
+                userService.getUserStorage().getUserById(otherId));
     }
 
 }

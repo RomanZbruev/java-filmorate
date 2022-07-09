@@ -4,25 +4,35 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.yanddex.practicum.filmorate.controller.FilmController;
 import ru.yanddex.practicum.filmorate.model.Film;
+import ru.yanddex.practicum.filmorate.service.FilmService;
+import ru.yanddex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yanddex.practicum.filmorate.storage.user.UserStorage;
 
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@WebMvcTest(controllers = FilmController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class FilmControllerTest {
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    FilmService filmService;
+    @Autowired
+    UserStorage userStorage;
+    @Autowired
+    FilmStorage filmStorage;
+
     Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .create();
@@ -141,7 +151,11 @@ public class FilmControllerTest {
                         .content(updateJson))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
         String message = responseUpdate.getResponse().getContentAsString();
-        assertEquals(updateJson, message);
+        assertTrue(message.contains("\"id\":1"));
+        assertTrue(message.contains("\"description\":\"Descrition\""));
+        assertTrue(message.contains("\"name\":\"Update\""));
+        assertTrue(message.contains("\"releaseDate\":\"2010-01-01\""));
+        assertTrue(message.contains("\"duration\":121"));
     }
 
     @Test
