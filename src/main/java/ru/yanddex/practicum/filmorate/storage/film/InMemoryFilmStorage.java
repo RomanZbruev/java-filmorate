@@ -55,7 +55,7 @@ public class InMemoryFilmStorage implements FilmStorage{
                 return film;
             } else {
                 IncorrectIdValidationException exception =
-                        new IncorrectIdValidationException("Такого фильма нет в базе!");
+                        new IncorrectIdValidationException("Такого фильма нет в базе");
                 log.warn(exception.getMessage());
                 throw exception;
             }

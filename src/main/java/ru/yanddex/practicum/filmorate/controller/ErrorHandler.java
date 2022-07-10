@@ -11,17 +11,17 @@ import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetExceptio
 import ru.yanddex.practicum.filmorate.service.exception.NotInFriendsException;
 import ru.yanddex.practicum.filmorate.service.exception.NotWithLikeException;
 
-@RestControllerAdvice
+@RestControllerAdvice()
 public class ErrorHandler {
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler()
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Нет в базе")
     public ErrorResponse handleIncorrectIdToGetException(IncorrectIdToGetException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Пользователь не в друзьях")
     public ErrorResponse handleNotInFriendsException(NotInFriendsException exception) {
         return new ErrorResponse(exception.getMessage());
     }

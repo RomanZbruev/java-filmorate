@@ -40,7 +40,7 @@ public class UserService {
         }
         else {
             NotInFriendsException exception =
-                    new NotInFriendsException("Ошибка удаления из друзей.Пользователь не в списке друзей");
+                    new NotInFriendsException("Ошибка удаления из друзей. Пользователь не в списке друзей");
             log.warn(exception.getMessage());
             throw exception;
         }

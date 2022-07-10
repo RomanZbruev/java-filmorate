@@ -43,7 +43,7 @@ public class FilmService {
         }
     }
 
-    public List<Film> getTenBestFilms(Integer count){
+    public List<Film> getBestFilms(Integer count){
         log.info(String.format("Показан  список %s лучших фильмов",count));
         return filmStorage.getAll().stream()
                 .sorted(Comparator.comparingInt(f ->-1*f.getLikes().size())) // сортируем в порядке убывания
