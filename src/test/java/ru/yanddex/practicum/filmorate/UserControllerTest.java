@@ -282,4 +282,21 @@ public class UserControllerTest {
         assertTrue(message.contains("default message [birthday]"));
         assertTrue(message.contains("default message [Дата рождения не может быть в будущем]"));
     }
+
+    @Test
+    public void dasda() throws Exception{
+        User user = new User("user@yandex.ru", "user", "Sergey", "2020-01-01");
+        String json = gson.toJson(user);
+        MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(json))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
+        User user2 = new User("user2@yandex.ru", "user2", "Sergey", "2020-01-01");
+        String json2 = gson.toJson(user);
+        MvcResult response2 = mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(json2))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andReturn();
+        MvcResult response3 = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/friends/2")).andReturn();
+    }
 }

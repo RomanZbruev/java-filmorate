@@ -43,17 +43,17 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer idFriend)
+    public void addFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId)
             throws IncorrectIdToGetException {
         userService.addFriend(userService.getUserStorage().getUserById(id),
-                userService.getUserStorage().getUserById(idFriend));
+                userService.getUserStorage().getUserById(friendId));
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer idFriend)
+    public void deleteFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId)
             throws IncorrectIdToGetException, NotInFriendsException {
         userService.deleteFriend(userService.getUserStorage().getUserById(id),
-                userService.getUserStorage().getUserById(idFriend));
+                userService.getUserStorage().getUserById(friendId));
     }
 
     @GetMapping("/users/{id}/friends")

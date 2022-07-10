@@ -50,11 +50,12 @@ public class UserService {
         List<User> commonFriends = new ArrayList<>();
         Set<Integer> firstUserFriends = user1.getFriends();
         Set<Integer> secondUserFriends = user2.getFriends();
+        if(firstUserFriends.size()!=0 && secondUserFriends.size()!=0){
         for (User user : userStorage.getAll()){
             if(firstUserFriends.contains(user.getId()) && secondUserFriends.contains(user.getId())){
                 commonFriends.add(user);
             }
-        }
+        }}
         return commonFriends;
     }
 
