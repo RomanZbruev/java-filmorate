@@ -80,6 +80,17 @@ public class InMemoryFilmStorage implements FilmStorage{
     }
 
     @Override
+    public void deleteFilmById(Integer id) throws IncorrectIdToGetException {
+        if(filmStorage.containsKey(id)){
+            filmStorage.remove(id);
+        }
+        else {
+            IncorrectIdToGetException exception = new IncorrectIdToGetException("Такого фильма нет в базе");
+            log.warn(exception.getMessage());
+            throw exception;
+        }
+    }
+    @Override
     public void clearStorage(){
         filmStorage.clear();
         id=0;

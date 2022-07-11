@@ -68,6 +68,17 @@ public class InMemoryUserStorage implements UserStorage{
     }
 
     @Override
+    public void deleteUserById(Integer id) throws IncorrectIdToGetException{
+        if (userStorage.containsKey(id)){
+            userStorage.remove(id);
+        }
+        else {
+            IncorrectIdToGetException exception = new IncorrectIdToGetException("Такого пользователя нет в базе");
+            log.warn(exception.getMessage());
+            throw exception;
+        }
+    }
+    @Override
     public void clearStorage(){
         userStorage.clear();
         id=0;

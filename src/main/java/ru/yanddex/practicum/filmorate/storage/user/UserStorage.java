@@ -16,5 +16,7 @@ public interface UserStorage {
 
     public User getUserById(int id) throws IncorrectIdToGetException;
 
+    public void deleteUserById(Integer id) throws IncorrectIdToGetException;
+
     public void clearStorage();
 }
