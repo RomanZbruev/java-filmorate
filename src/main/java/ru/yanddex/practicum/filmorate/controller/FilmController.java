@@ -28,42 +28,44 @@ public class FilmController {
 
     @GetMapping("/films")
     public List<Film> getAll() {
-        return filmService.getFilmStorage().getAll();
+        return filmService.getAll();
     }
 
     @PostMapping("/films")
-    public Film create(@RequestBody @Valid Film film) throws IncorrectDateValidationException {
-        return filmService.getFilmStorage().create(film);
+    public Film create(@RequestBody @Valid Film film) throws IncorrectDateValidationException, IncorrectIdValidationException {
+        return filmService.create(film);
     }
 
     @PutMapping("/films")
     public Film update(@RequestBody @Valid Film film) throws IncorrectIdValidationException,
             IncorrectDateValidationException {
-        return filmService.getFilmStorage().update(film);
+        return filmService.update(film);
     }
 
     @GetMapping("/films/{id}")
     public Film getFilmById(@PathVariable("id") Integer id) throws IncorrectIdToGetException {
-        return filmService.getFilmStorage().getFilmById(id);
+        return filmService.getFilmById(id);
     }
 
     @PutMapping("/films/{id}/like/{userId}")
     public void addLike(@PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId)
             throws IncorrectIdToGetException {
-        filmService.addLike(filmService.getUserStorage().getUserById(userId),
-                filmService.getFilmStorage().getFilmById(filmId));
+        filmService.addLike(userId,
+                filmId);
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
     public void deleteLike(@PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId)
-            throws IncorrectIdToGetException, NotWithLikeException {
-        filmService.deleteLike(filmService.getUserStorage().getUserById(userId),
-                filmService.getFilmStorage().getFilmById(filmId));
+            throws IncorrectIdToGetException{
+        filmService.deleteLike(userId,
+                filmId);
     }
 
     @GetMapping("/films/popular")
     public List<Film> getBestFilms(@RequestParam(defaultValue = "10", required = false) Integer count) {
         return filmService.getBestFilms(count);
     }
+
+
 }
 
