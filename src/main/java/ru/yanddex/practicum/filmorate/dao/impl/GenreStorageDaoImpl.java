@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import ru.yanddex.practicum.filmorate.dao.GenreStorageDao;
 import ru.yanddex.practicum.filmorate.model.Genre;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,9 +42,9 @@ public class GenreStorageDaoImpl implements GenreStorageDao {
                 "g.genre_name as name " +
                 "FROM genres g " +
                 "WHERE g.genre_id = ?; ";
-        List<Genre> result= jdbcTemplate.query(sqlQuery, this::makeGenre,id);
-        return result.size()==0?
-                Optional.empty():
+        List<Genre> result = jdbcTemplate.query(sqlQuery, this::makeGenre, id);
+        return result.size() == 0 ?
+                Optional.empty() :
                 Optional.of(result.get(0));
     }
 
@@ -67,8 +66,8 @@ public class GenreStorageDaoImpl implements GenreStorageDao {
         String sqlQuery = "UPDATE GENRES SET genre_name = ? WHERE genre_id = ?;";
         return jdbcTemplate.update(sqlQuery,
                 genre.getName(),
-                genre.getId()) == 0?
-                Optional.empty():
+                genre.getId()) == 0 ?
+                Optional.empty() :
                 Optional.of(genre);
     }
 
@@ -79,23 +78,23 @@ public class GenreStorageDaoImpl implements GenreStorageDao {
                 "WHERE GENRE_ID IN (SELECT FG.FG_GENRE_ID\n" +
                 "                       FROM FILMGENRES as FG\n" +
                 "    WHERE FG.FG_FILM_ID = ?);";
-        return jdbcTemplate.query(sqlQuery, this::makeGenre,id);
+        return jdbcTemplate.query(sqlQuery, this::makeGenre, id);
     }
 
     @Override
     public void deleteByFilmId(Integer id) {
         String sqlQuery = "DELETE  FROM  FILMGENRES\n" +
                 "WHERE FG_FILM_ID = ?;";
-        jdbcTemplate.update(sqlQuery,id);
+        jdbcTemplate.update(sqlQuery, id);
     }
 
     @Override
     public List<Genre> getGenresByIds(List<Integer> ids) {
-        String helper = String.join(" ,", Collections.nCopies(ids.size(),"?"));
+        String helper = String.join(" ,", Collections.nCopies(ids.size(), "?"));
         String sqlQuery = String.format("SELECT GENRE_ID, GENRE_NAME \n" +
                 "FROM GENRES \n" +
-                "WHERE GENRE_ID IN (%s) ;",helper);
-        return jdbcTemplate.query(sqlQuery,this::makeGenre, ids.toArray());
+                "WHERE GENRE_ID IN (%s) ;", helper);
+        return jdbcTemplate.query(sqlQuery, this::makeGenre, ids.toArray());
     }
 
     private Genre makeGenre(ResultSet resultSet, int i) throws SQLException {

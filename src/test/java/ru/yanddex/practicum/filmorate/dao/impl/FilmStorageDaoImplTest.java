@@ -28,8 +28,7 @@ public class FilmStorageDaoImplTest {
     @Test
     void getFilmByIdTest() throws IncorrectIdToGetException {
         Optional<Film> optional = storage.getFilmById(1);
-        assertThat(optional).isPresent()
-                .hasValueSatisfying(film -> assertThat(film).hasFieldOrPropertyWithValue("name", "name"));
+        assertThat(optional).isPresent().hasValueSatisfying(film -> assertThat(film).hasFieldOrPropertyWithValue("name", "name"));
     }
 
     @Test
@@ -41,15 +40,13 @@ public class FilmStorageDaoImplTest {
         Film film = new Film();
         film.setName("new_name");
         film.setDescription("new_description");
-        film.setReleaseDate(LocalDate.of(2010,1,1));
+        film.setReleaseDate(LocalDate.of(2010, 1, 1));
         film.setDuration(111);
         film.setMpa(mpa);
         film.setGenres(new ArrayList<>());
 
         Optional<Film> optionalFilm = storage.create(film);
 
-        assertThat(optionalFilm).isPresent()
-                .hasValueSatisfying(filmO -> assertThat(filmO)
-                        .hasFieldOrPropertyWithValue("name", "new_name"));
+        assertThat(optionalFilm).isPresent().hasValueSatisfying(filmO -> assertThat(filmO).hasFieldOrPropertyWithValue("name", "new_name"));
     }
 }

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yanddex.practicum.filmorate.controller.exception.IncorrectIdValidationException;
-import ru.yanddex.practicum.filmorate.model.Genre;
 import ru.yanddex.practicum.filmorate.model.Rating;
 import ru.yanddex.practicum.filmorate.service.RatingService;
 import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
@@ -25,7 +24,7 @@ public class RatingController {
     }
 
     @GetMapping("/mpa")
-    public List<Rating> getAll(){
+    public List<Rating> getAll() {
         return ratingService.getAll();
     }
 
@@ -35,7 +34,7 @@ public class RatingController {
     }
 
     @PostMapping("/mpa")
-    public Rating create(@RequestBody @Valid Rating rating){
+    public Rating create(@RequestBody @Valid Rating rating) {
         return ratingService.create(rating);
     }
 
@@ -43,4 +42,4 @@ public class RatingController {
     public Rating update(@RequestBody @Valid Rating rating) throws IncorrectIdValidationException {
         return ratingService.update(rating);
     }
- }
+}

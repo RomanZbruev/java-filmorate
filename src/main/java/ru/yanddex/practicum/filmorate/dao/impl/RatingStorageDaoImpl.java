@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yanddex.practicum.filmorate.dao.RatingStorageDao;
-import ru.yanddex.practicum.filmorate.model.Genre;
 import ru.yanddex.practicum.filmorate.model.Rating;
 
 import java.sql.PreparedStatement;
@@ -34,7 +33,7 @@ public class RatingStorageDaoImpl implements RatingStorageDao {
         String sqlQuery = "SELECT r.rating_id as id,  " +
                 "r.rating_name as name " +
                 "FROM ratings r; ";
-        return jdbcTemplate.query(sqlQuery,this::makeRating);
+        return jdbcTemplate.query(sqlQuery, this::makeRating);
     }
 
     @Override
@@ -43,9 +42,9 @@ public class RatingStorageDaoImpl implements RatingStorageDao {
                 "r.rating_name as name " +
                 "FROM ratings r " +
                 "WHERE r.rating_id = ?;";
-        List<Rating> result= jdbcTemplate.query(sqlQuery, this::makeRating,id);
-        return result.size()==0?
-                Optional.empty():
+        List<Rating> result = jdbcTemplate.query(sqlQuery, this::makeRating, id);
+        return result.size() == 0 ?
+                Optional.empty() :
                 Optional.of(result.get(0));
     }
 
@@ -66,8 +65,8 @@ public class RatingStorageDaoImpl implements RatingStorageDao {
         String sqlQuery = " UPDATE RATINGS set rating_name = ? WHERE rating_id = ?;";
         return jdbcTemplate.update(sqlQuery,
                 rating.getName(),
-                rating.getId()) == 0?
-                Optional.empty():
+                rating.getId()) == 0 ?
+                Optional.empty() :
                 Optional.of(rating);
     }
 

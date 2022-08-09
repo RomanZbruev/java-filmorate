@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yanddex.practicum.filmorate.dao.UserStorageDao;
-import ru.yanddex.practicum.filmorate.model.Film;
 import ru.yanddex.practicum.filmorate.model.User;
 import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
 
@@ -34,12 +33,12 @@ public class UserStorageDaoImplsTest {
         user.setName("my_name");
         user.setEmail("new_email");
         user.setLogin("new_login");
-        user.setBirthday(LocalDate.of(1998,1,15));
+        user.setBirthday(LocalDate.of(1998, 1, 15));
 
         Optional<User> optionalUser = storage.create(user);
 
         assertThat(optionalUser).isPresent().hasValueSatisfying(userO -> assertThat(userO)
-                .hasFieldOrPropertyWithValue("name","my_name"));
+                .hasFieldOrPropertyWithValue("name", "my_name"));
 
     }
 }

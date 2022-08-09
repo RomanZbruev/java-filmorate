@@ -19,7 +19,7 @@ public interface UserStorageDao {
 
     public boolean deleteUserById(Integer id) throws IncorrectIdToGetException;
 
-    public List<User>  getFriends(Integer id) throws IncorrectIdToGetException;
+    public List<User> getFriends(Integer id) throws IncorrectIdToGetException;
 
     public void addFriend(int userId, int friendId);
 

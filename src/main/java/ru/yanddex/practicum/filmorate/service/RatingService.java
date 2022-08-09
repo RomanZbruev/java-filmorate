@@ -28,28 +28,26 @@ public class RatingService {
     }
 
     public Rating getRatingById(Integer id) throws IncorrectIdToGetException {
-        if (ratingStorage.getRatingById(id).isPresent()){
+        if (ratingStorage.getRatingById(id).isPresent()) {
             return ratingStorage.getRatingById(id).get();
         }
         throw new IncorrectIdToGetException("Рейтинга с таким айди не существует");
     }
 
-    public Rating create(Rating rating){
+    public Rating create(Rating rating) {
         Optional<Rating> optionalRating = ratingStorage.create(rating);
-        if (optionalRating.isPresent()){
+        if (optionalRating.isPresent()) {
             return optionalRating.get();
-        }
-        else {
+        } else {
             throw new ValidationException("Возрастной рейтинг не создан");
         }
     }
 
     public Rating update(Rating rating) throws IncorrectIdValidationException {
         Optional<Rating> optionalRating = ratingStorage.update(rating);
-        if (optionalRating.isPresent()){
+        if (optionalRating.isPresent()) {
             return optionalRating.get();
-        }
-        else {
+        } else {
             throw new IncorrectIdValidationException("Рейтинга с таким айди на существует");
         }
     }

@@ -7,7 +7,6 @@ import ru.yanddex.practicum.filmorate.controller.exception.IncorrectIdValidation
 import ru.yanddex.practicum.filmorate.model.User;
 import ru.yanddex.practicum.filmorate.service.UserService;
 import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
-import ru.yanddex.practicum.filmorate.service.exception.NotInFriendsException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -51,7 +50,7 @@ public class UserController {
     @DeleteMapping("/users/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId)
             throws IncorrectIdToGetException {
-        userService.deleteFriend(id,friendId);
+        userService.deleteFriend(id, friendId);
     }
 
     @GetMapping("/users/{id}/friends")

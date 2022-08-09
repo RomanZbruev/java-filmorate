@@ -11,7 +11,6 @@ import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import ru.yanddex.practicum.filmorate.service.FilmService;
 import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
-import ru.yanddex.practicum.filmorate.service.exception.NotWithLikeException;
 
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class FilmController {
 
     @DeleteMapping("/films/{id}/like/{userId}")
     public void deleteLike(@PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId)
-            throws IncorrectIdToGetException{
+            throws IncorrectIdToGetException {
         filmService.deleteLike(userId,
                 filmId);
     }

@@ -25,6 +25,6 @@ public class RatingStorageDaoImplsTest {
         Optional<Rating> optional = storage.getRatingById(1);
         assertThat(optional).isPresent()
                 .hasValueSatisfying(rating -> assertThat(rating)
-                        .hasFieldOrPropertyWithValue("name","G"));
+                        .hasFieldOrPropertyWithValue("name", "G"));
     }
 }

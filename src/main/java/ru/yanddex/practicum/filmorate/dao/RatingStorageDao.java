@@ -1,7 +1,6 @@
 package ru.yanddex.practicum.filmorate.dao;
 
 
-import ru.yanddex.practicum.filmorate.model.Genre;
 import ru.yanddex.practicum.filmorate.model.Rating;
 
 import java.util.List;

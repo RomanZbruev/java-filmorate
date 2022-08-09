@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yanddex.practicum.filmorate.controller.exception.IncorrectIdValidationException;
 import ru.yanddex.practicum.filmorate.model.Genre;
-import ru.yanddex.practicum.filmorate.model.User;
 import ru.yanddex.practicum.filmorate.service.GenreService;
 import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
 
@@ -25,13 +24,13 @@ public class GenreController {
     }
 
     @GetMapping("/genres")
-    public List<Genre> getAll(){
+    public List<Genre> getAll() {
         return genreService.getAll();
     }
 
 
     @GetMapping("/genres/{id}")
-    public Genre getGenreById(@PathVariable("id") Integer id) throws IncorrectIdToGetException{
+    public Genre getGenreById(@PathVariable("id") Integer id) throws IncorrectIdToGetException {
         return genreService.getGenreById(id);
     }
 

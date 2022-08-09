@@ -30,28 +30,25 @@ public class GenreService {
     public Genre getGenreById(Integer id) throws IncorrectIdToGetException {
         if (genreStorage.getGenreById(id).isPresent()) {
             return genreStorage.getGenreById(id).get();
-        }
-        else {
+        } else {
             throw new IncorrectIdToGetException("Жанра с таким айди не существует");
         }
     }
 
-    public Genre create(Genre genre){
+    public Genre create(Genre genre) {
         Optional<Genre> genreOptional = genreStorage.create(genre);
-        if(genreOptional.isPresent()){
+        if (genreOptional.isPresent()) {
             return genreOptional.get();
-        }
-        else {
+        } else {
             throw new ValidationException("Жанра не создан");
         }
     }
 
-    public Genre update (Genre genre) throws IncorrectIdValidationException {
+    public Genre update(Genre genre) throws IncorrectIdValidationException {
         Optional<Genre> genreOptional = genreStorage.update(genre);
-        if (genreOptional.isPresent()){
+        if (genreOptional.isPresent()) {
             return genreOptional.get();
-        }
-        else {
+        } else {
             throw new IncorrectIdValidationException("Жанра с таким айди не существует");
         }
     }

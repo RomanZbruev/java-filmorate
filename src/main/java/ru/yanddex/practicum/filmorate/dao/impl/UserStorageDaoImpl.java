@@ -39,7 +39,7 @@ public class UserStorageDaoImpl implements UserStorageDao {
                 "       u.USER_NAME as user_name,\n" +
                 "       u.USER_BIRTHDAY as user_birthday\n" +
                 "FROM USERS u;";
-        return jdbcTemplate.query(sqlQuery,this::makeUser);
+        return jdbcTemplate.query(sqlQuery, this::makeUser);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserStorageDaoImpl implements UserStorageDao {
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getLogin());
             stmt.setString(3, user.getName());
-            stmt.setDate(4,Date.valueOf(user.getBirthday()));
+            stmt.setDate(4, Date.valueOf(user.getBirthday()));
             return stmt;
         }, keyHolder);
         return getUserById(Objects.requireNonNull(keyHolder.getKey()).intValue());
@@ -67,9 +67,9 @@ public class UserStorageDaoImpl implements UserStorageDao {
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday(),
-                user.getId()) == 0?
-                        Optional.empty():
-                        Optional.of(user);
+                user.getId()) == 0 ?
+                Optional.empty() :
+                Optional.of(user);
     }
 
     @Override
@@ -81,9 +81,9 @@ public class UserStorageDaoImpl implements UserStorageDao {
                 "       us.USER_BIRTHDAY as user_birthday\n" +
                 "FROM USERS us " +
                 "WHERE us.USER_ID = ?;";
-        List< User> result = jdbcTemplate.query(sqlQuery, this::makeUser,id);
-        return result.size()==0?
-                Optional.empty():
+        List<User> result = jdbcTemplate.query(sqlQuery, this::makeUser, id);
+        return result.size() == 0 ?
+                Optional.empty() :
                 Optional.of(result.get(0));
     }
 
@@ -107,21 +107,21 @@ public class UserStorageDaoImpl implements UserStorageDao {
                 "        FROM USERFRIENDS uf\n" +
                 "        WHERE uf.UF_USER_ID = ?\n" +
                 "    );";
-        return jdbcTemplate.query(sqlQuery,this::makeUser,id);
+        return jdbcTemplate.query(sqlQuery, this::makeUser, id);
     }
 
     @Override
     public void addFriend(int userId, int friendId) {
         String sqlQuery = "INSERT INTO USERFRIENDS (UF_USER_ID, UF_FRIEND_ID)" +
                 " VALUES ( ?,? );";
-        jdbcTemplate.update(sqlQuery,userId,friendId);
+        jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 
     @Override
     public void deleteFriend(int userId, int friendId) {
         String sqlQuery = "DELETE FROM USERFRIENDS\n" +
                 "       WHERE UF_USER_ID = ? AND UF_FRIEND_ID =?;";
-        jdbcTemplate.update(sqlQuery,userId,friendId);
+        jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class UserStorageDaoImpl implements UserStorageDao {
                 "            FROM USERFRIENDS uf\n" +
                 "        WHERE uf.UF_USER_ID = ?\n" +
                 "        );";
-        return jdbcTemplate.query(sqlQuery,this::makeUser,user1,user2);
+        return jdbcTemplate.query(sqlQuery, this::makeUser, user1, user2);
     }
 
     private User makeUser(ResultSet resultSet, int i) throws SQLException {
