@@ -8,6 +8,7 @@ import ru.yanddex.practicum.filmorate.dao.FilmGenreStorageDao;
 import ru.yanddex.practicum.filmorate.dao.GenreStorageDao;
 import ru.yanddex.practicum.filmorate.model.Film;
 import ru.yanddex.practicum.filmorate.model.Genre;
+import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
 
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class FilmGenreStorageDaoImpl implements FilmGenreStorageDao {
     }
 
     @Override
-    public Optional<Film> addFilmGenres(Film film, Optional<Film> filmOptional){
+    public Optional<Film> addFilmGenres(Film film, Optional<Film> filmOptional) throws IncorrectIdToGetException{
         filmOptional.ifPresent(film1 -> {
             if (!film1.getGenres().isEmpty()) {
                 deleteByFilmId(film.getId());
