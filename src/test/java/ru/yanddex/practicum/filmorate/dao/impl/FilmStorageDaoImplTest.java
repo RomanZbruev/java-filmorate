@@ -32,7 +32,7 @@ public class FilmStorageDaoImplTest {
     }
 
     @Test
-    void createFilmTest() throws IncorrectIdValidationException, IncorrectDateValidationException {
+    void createFilmTest() throws IncorrectIdValidationException, IncorrectDateValidationException, IncorrectIdToGetException {
         Rating mpa = new Rating();
         mpa.setId(1);
         mpa.setName("mpa");
