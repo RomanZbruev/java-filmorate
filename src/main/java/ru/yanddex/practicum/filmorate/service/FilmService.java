@@ -37,7 +37,8 @@ public class FilmService {
         }
     }
 
-    public Film create(Film film) throws IncorrectDateValidationException, IncorrectIdValidationException {
+    public Film create(Film film) throws IncorrectDateValidationException,
+            IncorrectIdValidationException, IncorrectIdToGetException {
         Optional<Film> filmOptional = filmStorage.create(film);
         if (filmOptional.isPresent()) {
             return filmOptional.get();
@@ -55,29 +56,7 @@ public class FilmService {
         }
     }
 
-    public void addLike(Integer userId, Integer filmId) throws IncorrectIdToGetException {
-        try {
-            filmStorage.addLike(userId, filmId);
-            log.info("Лайк успешно добавлен");
-        } catch (DataIntegrityViolationException e) {
-            log.warn(e.getMessage());
-            throw new IncorrectIdToGetException("Ошибка добавления лайка");
-        }
 
-    }
-
-    public void deleteLike(Integer userId, Integer filmId) throws IncorrectIdToGetException {
-        try {
-            if (!filmStorage.deleteLike(userId, filmId)) {
-                throw new IncorrectIdToGetException("Задан неправильный айди пользователя или лайка");
-            }
-        } catch (DataIntegrityViolationException e) {
-            IncorrectIdToGetException exception =
-                    new IncorrectIdToGetException("Ошибка удаления лайка");
-            log.warn(exception.getMessage());
-            throw exception;
-        }
-    }
 
     public List<Film> getBestFilms(Integer count) {
         try {

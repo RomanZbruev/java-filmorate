@@ -2,17 +2,16 @@ package ru.yanddex.practicum.filmorate.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yanddex.practicum.filmorate.controller.exception.IncorrectDateValidationException;
 import ru.yanddex.practicum.filmorate.controller.exception.IncorrectIdValidationException;
+import ru.yanddex.practicum.filmorate.dao.FilmGenreStorageDao;
 import ru.yanddex.practicum.filmorate.dao.FilmStorageDao;
 import ru.yanddex.practicum.filmorate.dao.GenreStorageDao;
 import ru.yanddex.practicum.filmorate.model.Film;
-import ru.yanddex.practicum.filmorate.model.Genre;
 import ru.yanddex.practicum.filmorate.model.Rating;
 import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
 
@@ -22,11 +21,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -35,10 +32,15 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
     private final JdbcTemplate jdbcTemplate;
     private final GenreStorageDao genreStorage;
 
+    private final FilmGenreStorageDao filmGenreStorage;
+
     @Autowired
-    public FilmStorageDaoImpl(JdbcTemplate jdbcTemplate, GenreStorageDao genreStorage) {
+    public FilmStorageDaoImpl(JdbcTemplate jdbcTemplate,
+                              GenreStorageDao genreStorage,
+                              FilmGenreStorageDao filmGenreStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.genreStorage = genreStorage;
+        this.filmGenreStorage = filmGenreStorage;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
     }
 
     @Override
-    public Optional<Film> create(Film film) throws IncorrectDateValidationException {
+    public Optional<Film> create(Film film) throws IncorrectDateValidationException, IncorrectIdToGetException {
 
         String sqlQuery = "INSERT INTO FILMS " +
                 "(FILM_NAME, FILM_DESCRIPTION, FILM_RELEASE_DATE, FILM_DURATION , FILM_RATING_ID)" +
@@ -72,7 +74,8 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
             return stmt;
         }, keyHolder);
         film.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
-        return addFilmGenres(film, keyHolder);
+        Optional<Film> filmOptional = getFilmById(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        return filmGenreStorage.addFilmGenres(film,filmOptional);
     }
 
     @Override
@@ -82,50 +85,20 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
                     "    FILM_NAME = ?, FILM_DESCRIPTION = ?, FILM_RELEASE_DATE = ?, FILM_DURATION = ?," +
                     " FILM_RATING_ID = ?\n" +
                     "    where FILM_ID = ?;";
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(connection -> {
-                PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"film_id"});
-                stmt.setString(1, film.getName());
-                stmt.setString(2, film.getDescription());
-                stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
-                stmt.setLong(4, film.getDuration());
-                stmt.setInt(5, film.getMpa().getId());
-                stmt.setInt(6, film.getId());
-                return stmt;
-            }, keyHolder);
-
-            return addFilmGenres(film, keyHolder);
+            Optional<Film> filmOptional = jdbcTemplate.update(sqlQuery,
+                    film.getName(),
+                    film.getDescription(),
+                    film.getReleaseDate(),
+                    film.getDuration(),
+                    film.getMpa().getId(),
+                    film.getId()) == 0?
+                    Optional.empty():
+                    Optional.of(film);
+            return filmGenreStorage.addFilmGenres(film,getFilmById(film.getId()));//на основании полученного значения film
+            //обновляем имеющееся в базе данных
         } catch (Exception e) {
             throw new IncorrectIdValidationException("Получены некорректные данные");
         }
-    }
-
-    private Optional<Film> addFilmGenres(Film film, KeyHolder keyHolder) {
-        Optional<Film> optionalFilm = getFilmById(Objects.requireNonNull(keyHolder.getKey()).intValue());
-        optionalFilm.ifPresent(film1 -> {
-            if (!film1.getGenres().isEmpty()) {
-                genreStorage.deleteByFilmId(film.getId());
-            }
-        });
-        film.getGenres().forEach(genre -> {
-            try {
-                String sqlQuery = "INSERT INTO FILMGENRES (fg_film_id, fg_genre_id)" +
-                        "VALUES (?,?)";
-                jdbcTemplate.update(sqlQuery, film.getId(), genre.getId());
-            } catch (DuplicateKeyException e) {
-                log.warn(e.getMessage());
-            }
-        });
-
-        if (film.getGenres() != null && film.getGenres().size() != 0) {
-            optionalFilm.ifPresent(film1 -> {
-                film1.setGenres(genreStorage.getGenresByIds(film.getGenres().stream()
-                        .mapToInt(Genre::getId).boxed().collect(Collectors.toList())));
-            });
-        } else {
-            optionalFilm.ifPresent(film1 -> film1.setGenres(new ArrayList<>()));
-        }
-        return optionalFilm;
     }
 
     @Override
@@ -151,19 +124,6 @@ public class FilmStorageDaoImpl implements FilmStorageDao {
         String sqlQuery = "DELETE FROM FILMS\n " +
                 "WHERE FILMS.FILM_ID = ?;  ";
         return jdbcTemplate.update(sqlQuery, id) > 0;
-    }
-
-    @Override
-    public void addLike(Integer userId, Integer filmId) {
-        String sqlQuery = "INSERT INTO LIKES (L_USER_ID, L_FILM_ID) VALUES ( ?,? );";
-        jdbcTemplate.update(sqlQuery, userId, filmId);
-    }
-
-    @Override
-    public boolean deleteLike(Integer userId, Integer filmId) {
-        String sqlQuery = "DELETE FROM LIKES\n " +
-                "WHERE LIKES.L_USER_ID = ? AND LIKES.L_FILM_ID = ?";
-        return jdbcTemplate.update(sqlQuery, userId, filmId) > 0;
     }
 
     @Override

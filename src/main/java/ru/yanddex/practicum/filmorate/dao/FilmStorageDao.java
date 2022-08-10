@@ -12,7 +12,7 @@ public interface FilmStorageDao {
 
     public List<Film> getAll();
 
-    public Optional<Film> create(Film film) throws IncorrectDateValidationException, IncorrectIdValidationException;
+    public Optional<Film> create(Film film) throws IncorrectDateValidationException, IncorrectIdValidationException, IncorrectIdToGetException;
 
     public Optional<Film> update(Film film) throws IncorrectIdValidationException,
             IncorrectDateValidationException;
@@ -20,10 +20,6 @@ public interface FilmStorageDao {
     public Optional<Film> getFilmById(Integer id) throws IncorrectIdToGetException;
 
     public boolean deleteFilmById(Integer id) throws IncorrectIdToGetException;
-
-    public void addLike(Integer userId, Integer filmId);
-
-    public boolean deleteLike(Integer userId, Integer filmId);
 
     public List<Film> getBestFilms(Integer limit);
 

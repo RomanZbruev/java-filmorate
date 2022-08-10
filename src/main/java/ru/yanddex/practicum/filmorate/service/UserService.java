@@ -57,45 +57,6 @@ public class UserService {
         }
     }
 
-    public void addFriend(Integer userId, Integer friendId) throws IncorrectIdToGetException {
-        try {
-            userStorage.addFriend(userId, friendId);
-            log.info("Пользователь успешно добавлен в друзья");
-        } catch (DataIntegrityViolationException e) {
-            log.warn(e.getMessage());
-            throw new IncorrectIdToGetException("Ошибка добавления в друзья");
-        }
 
-    }
-
-    public void deleteFriend(Integer userId, Integer friendId) throws IncorrectIdToGetException {
-        try {
-            userStorage.deleteFriend(userId, friendId);
-            log.info("Пользователь успешно удален из друзей");
-        } catch (DataIntegrityViolationException e) {
-            IncorrectIdToGetException exception =
-                    new IncorrectIdToGetException("Ошибка удаления из друзей");
-            log.warn(exception.getMessage());
-            throw exception;
-        }
-    }
-
-    public List<User> getCommonFriends(Integer user1Id, Integer user2Id) throws IncorrectIdToGetException {
-        try {
-            return userStorage.getCommonFriends(user1Id, user2Id);
-        } catch (DataIntegrityViolationException e) {
-            log.warn(e.getMessage());
-            throw new IncorrectIdToGetException("Ошибка получения списка общих друзей");
-        }
-    }
-
-    public List<User> getFriendList(Integer userId) throws IncorrectIdToGetException {
-        try {
-            return userStorage.getFriends(userId);
-        } catch (DataIntegrityViolationException e) {
-            log.warn(e.getMessage());
-            throw new IncorrectIdToGetException("Ошибка получения списка общих друзей");
-        }
-    }
 
 }

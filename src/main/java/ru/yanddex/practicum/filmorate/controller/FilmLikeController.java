@@ -10,19 +10,22 @@ import javax.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.yanddex.practicum.filmorate.service.FilmService;
+import ru.yanddex.practicum.filmorate.service.LikeService;
 import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
 
 import java.util.List;
 
 @RestController
 @Slf4j
-public class FilmController {
+public class FilmLikeController {
 
     private final FilmService filmService;
+    private final LikeService likeService;
 
     @Autowired
-    public FilmController(FilmService filmService) {
+    public FilmLikeController(FilmService filmService, LikeService likeService) {
         this.filmService = filmService;
+        this.likeService = likeService;
     }
 
     @GetMapping("/films")
@@ -31,7 +34,8 @@ public class FilmController {
     }
 
     @PostMapping("/films")
-    public Film create(@RequestBody @Valid Film film) throws IncorrectDateValidationException, IncorrectIdValidationException {
+    public Film create(@RequestBody @Valid Film film) throws IncorrectDateValidationException,
+            IncorrectIdValidationException, IncorrectIdToGetException {
         return filmService.create(film);
     }
 
@@ -49,14 +53,14 @@ public class FilmController {
     @PutMapping("/films/{id}/like/{userId}")
     public void addLike(@PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId)
             throws IncorrectIdToGetException {
-        filmService.addLike(userId,
+        likeService.addLike(userId,
                 filmId);
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
     public void deleteLike(@PathVariable("id") Integer filmId, @PathVariable("userId") Integer userId)
             throws IncorrectIdToGetException {
-        filmService.deleteLike(userId,
+        likeService.deleteLike(userId,
                 filmId);
     }
 
