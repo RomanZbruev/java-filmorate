@@ -5,67 +5,66 @@ import org.springframework.web.bind.annotation.*;
 
 import ru.yanddex.practicum.filmorate.controller.exception.IncorrectIdValidationException;
 import ru.yanddex.practicum.filmorate.model.User;
+import ru.yanddex.practicum.filmorate.service.FriendService;
 import ru.yanddex.practicum.filmorate.service.UserService;
 import ru.yanddex.practicum.filmorate.service.exception.IncorrectIdToGetException;
-import ru.yanddex.practicum.filmorate.service.exception.NotInFriendsException;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-public class UserController {
+public class UserFriendController {
 
     private final UserService userService;
+    private final FriendService friendService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserFriendController(UserService userService, FriendService friendService) {
         this.userService = userService;
+        this.friendService = friendService;
     }
 
     @GetMapping("/users")
     public List<User> getAll() {
-        return userService.getUserStorage().getAll();
+        return userService.getAll();
     }
 
     @PostMapping("/users")
     public User create(@RequestBody @Valid User user) {
-        return userService.getUserStorage().create(user);
+        return userService.create(user);
     }
 
     @PutMapping("/users")
     public User update(@RequestBody @Valid User user) throws IncorrectIdValidationException {
-        return userService.getUserStorage().update(user);
+        return userService.update(user);
     }
 
     @GetMapping("/users/{id}")
     public User getUserById(@PathVariable("id") Integer id) throws IncorrectIdToGetException {
-        return userService.getUserStorage().getUserById(id);
+        return userService.getUserById(id);
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
     public void addFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId)
             throws IncorrectIdToGetException {
-        userService.addFriend(userService.getUserStorage().getUserById(id),
-                userService.getUserStorage().getUserById(friendId));
+        friendService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId)
-            throws IncorrectIdToGetException, NotInFriendsException {
-        userService.deleteFriend(userService.getUserStorage().getUserById(id),
-                userService.getUserStorage().getUserById(friendId));
+            throws IncorrectIdToGetException {
+        friendService.deleteFriend(id, friendId);
     }
 
     @GetMapping("/users/{id}/friends")
     public List<User> getFriendList(@PathVariable("id") Integer id) throws IncorrectIdToGetException {
-        return userService.getFriendList(userService.getUserStorage().getUserById(id));
+        return friendService.getFriendList(id);
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
     public List<User> getCommonFriends(@PathVariable("id") Integer id, @PathVariable("otherId") Integer otherId)
             throws IncorrectIdToGetException {
-        return userService.getCommonFriends(userService.getUserStorage().getUserById(id),
-                userService.getUserStorage().getUserById(otherId));
+        return friendService.getCommonFriends(id, otherId);
     }
 
 }
